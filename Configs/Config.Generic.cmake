@@ -1,0 +1,1 @@
+set(GENERIC TRUE)
