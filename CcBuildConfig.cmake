@@ -7,7 +7,7 @@ include(${CCBUILDCONFIG_DIR}/CcMacros.cmake )
 ################################################################################
 # Load Board settings if defined
 if(DEFINED CCOS_BOARD)
-  CcOSGetKnownBoard(${CCOS_BOARD} BoardDir)
+  CcGetKnownBoard(${CCOS_BOARD} BoardDir)
   if(NOT ${BoardDir} STREQUAL "")
     include(${CCBUILDCONFIG_DIR}/${BoardDir})
   elseif(${CCOS_BOARD} MATCHES "/Config.cmake")
