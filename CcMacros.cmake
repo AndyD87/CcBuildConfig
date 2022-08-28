@@ -10,7 +10,6 @@ if(NOT CC_MACRO_LOADED)
   set(CC_BUILDLEVEL_BUILD          2)
   set(CC_BUILDLEVEL_REQUIRED       3)
 
-
   SET(CC_BUILD_ARCH_X86    0)
   SET(CC_BUILD_ARCH_X64    1)
   SET(CC_BUILD_ARCH_ARM    2)
@@ -18,9 +17,47 @@ if(NOT CC_MACRO_LOADED)
   SET(CC_BUILD_ARCH_XTENSA 4)
 
   ################################################################################
+  # Make find files available for cmake
+  ################################################################################
+  list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/Find)
+
+  ################################################################################
   # Load Cmake modules
   ################################################################################
   # currently no required
+
+  ################################################################################
+  # Add a custom target, wich can ran cmake with same arguments as previously
+  ################################################################################
+  add_custom_target(RUN_CMAKE
+                    COMMAND cmake ARGS .
+  )
+  set_property( TARGET RUN_CMAKE PROPERTY FOLDER "CMakePredefinedTargets")
+  
+  ################################################################################
+  # Setup Cache directory if not yet defined
+  ################################################################################
+  if(NOT DEFINED CC_CACHE_DIR)
+    # Check if system has defined a cache dir
+    if(DEFINED ENV{CC_CACHE_DIR})
+      file(TO_CMAKE_PATH  $ENV{CC_CACHE_DIR} CC_CACHE_DIR)
+    else()
+      # Check if Cache out of projects is existing
+      # Go typically 3 dirs up Sources/CMakeConfig/CcBuildConfig
+      if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/../../../Cache)
+        set( CC_CACHE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../../Cache)
+      else()
+        # use typical project root for Cache directory
+        set( CC_CACHE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../Cache)
+      endif()
+    endif()
+    # Check if Cache directory already exists
+    if(NOT EXISTS ${CC_CACHE_DIR})
+      # create it
+      file(MAKE_DIRECTORY ${CC_CACHE_DIR})
+    endif()
+  endif()
+  message("- Cache directory: ${CC_CACHE_DIR}")
 
   ################################################################################
   # Setup debug postfix
@@ -53,23 +90,6 @@ if(NOT CC_MACRO_LOADED)
       set(${TargetDir} "")
     endif()
   endmacro()
-
-  ################################################################################
-  # Make find files available for cmake
-  ################################################################################
-  list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/Find)
-
-  # Avoid CMAKE Warning for Qt defined variable QT_QMAKE_EXECUTABLE
-  if(QT_QMAKE_EXECUTABLE)
-    # do nothing just avoid warning
-  endif(QT_QMAKE_EXECUTABLE)
-
-  # Add a custom target, wich can ran cmake with same arguments as previously
-  add_custom_target(RUN_CMAKE
-                    COMMAND cmake ARGS .)
-
-  set_property( TARGET RUN_CMAKE PROPERTY FOLDER "CMakePredefinedTargets")
-
 
   ################################################################################
   # Set Filters to keep FolderStructurs for IDEs like VisualStudios
@@ -267,6 +287,8 @@ if(NOT CC_MACRO_LOADED)
       elseif(${CMAKE_GENERATOR} MATCHES "Unix Makefiles")
         message("- Load make program: make")
         include(${CC_MACRO_DIR}/Toolchains/make/Toolchain.cmake)
+        # Set some common variables
+        set(CMAKE_COLOR_MAKEFILE OFF CACHE INTERNAL "Cmake Settings")  # Remove colored output      
       endif()
     else()
       message("- Load default make program: ninja")
@@ -1115,5 +1137,12 @@ if(NOT CC_MACRO_LOADED)
       set(${Output} "")
     endif()
   endmacro()
+
+  ################################################################################
+  # Avoid CMAKE Warning for Qt defined variable QT_QMAKE_EXECUTABLE
+  ################################################################################
+  if(QT_QMAKE_EXECUTABLE)
+    # do nothing just avoid warning for unused variable
+  endif(QT_QMAKE_EXECUTABLE)
 
 endif(NOT CC_MACRO_LOADED)
