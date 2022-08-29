@@ -9,15 +9,15 @@
 ################################################################################
 
 # Generate relative file path for kernel link
-file(RELATIVE_PATH LINUX_KERNEL_FILE_PATH ${CMAKE_CURRENT_BINARY_DIR} "${CMAKE_CURRENT_LIST_DIR}/../../../CcKernelModule/Linux/main.c")
+file(RELATIVE_PATH LINUX_KERNEL_FILE_PATH ${CMAKE_CURRENT_BINARY_DIR} "${CMAKE_CURRENT_LIST_DIR}/main.c")
 get_filename_component(LINUX_KERNEL_FILE_PATH ${LINUX_KERNEL_FILE_PATH} DIRECTORY)
 
 configure_file( "${CMAKE_CURRENT_LIST_DIR}/Kbuild.in"
                 "${CMAKE_CURRENT_BINARY_DIR}/Kbuild" @ONLY)
 
 set (SOURCE_FILES
-      "${CMAKE_CURRENT_LIST_DIR}/../../../CcKernelModule/Linux/main.c"
-      "${CMAKE_CURRENT_LIST_DIR}/../../../CcKernelModule/Linux/CcMalloc.c"
+      "${CMAKE_CURRENT_LIST_DIR}/main.c"
+      "${CMAKE_CURRENT_LIST_DIR}/CcMalloc.c"
       "${CMAKE_CURRENT_BINARY_DIR}/Kbuild"
 )
 

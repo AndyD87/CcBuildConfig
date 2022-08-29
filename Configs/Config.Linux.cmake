@@ -5,9 +5,7 @@ find_package(KernelHeaders)
 if(KERNELHEADERS_FOUND)
   message("-- LinuxHeaders available")
 
-  set(CCKERNEL_DIR        ${CMAKE_CURRENT_LIST_DIR}/../../CcKernel        )
-  set(CCKERNEL_TYPES_DIR  ${CMAKE_CURRENT_LIST_DIR}/../../CcKernel/Types  )
-  set(CCKERNELMODULE_DIR  ${CMAKE_CURRENT_LIST_DIR}/../../CcKernelModule  )
+  set(CCKERNEL_DIR        $<TARGET_PROPERTY:CcKernel,INCLUDE_DIRECTORIES>)
   set(CCKERNEL_MODULE_AVAILABLE     TRUE)
   set(CCKERNEL_MODULE_INCLUDE_DIRS  ${CMAKE_CURRENT_LIST_DIR}/Linux)
 
