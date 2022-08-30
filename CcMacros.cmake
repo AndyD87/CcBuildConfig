@@ -646,17 +646,14 @@ if(NOT CC_MACRO_LOADED)
   endfunction()
 
   ################################################################################
-  # Download an archive and extract
-  # If this direcotry exists, the download will be skipped.
-  # If an error or interruption occured, the download will repeated next time.
-  # @param Url: Url to clone from
-  # @param TargetDir:  Target output directory to extract packte to.
-  #                    This path will also be used for temporary files:
-  #                       ${TargetDir}.zipped
-  #                       ${TargetDir}.progress
-  # @param SourceUrl: Url to download package from
+  # Clone a git repository
+  # @param TargetDir: Target directory to clone to
+  # @param SourceUrl: Url to clone repository from
+  #  optional pramters:
+  #       COMMIT [Hash|Tag]
   ################################################################################
   macro(CcGitClone TargetDir Url)
+    cmake_parse_arguments(GIT "" "COMMIT" "" ${ARGN})
     set(CURRENT_URL ${Url})
     set(TargetProgress "${TargetDir}.progress")
     if(EXISTS ${TargetProgress})
@@ -689,11 +686,22 @@ if(NOT CC_MACRO_LOADED)
             file(REMOVE ${TargetProgress})
           endif()
           message("- Cloning succeeded")
-          if(ARGN)
+          if(GIT_COMMIT)
+            execute_process(COMMAND git checkout "${GIT_COMMIT}"
+                            RESULT_VARIABLE Clone_EXTRACT_RESULT
+                            OUTPUT_QUIET ERROR_QUIET
+                            WORKING_DIRECTORY "${TargetDir}"
+                            )
+            if(${Clone_EXTRACT_RESULT} EQUAL 0)
+              message("- Checkout succeeded")
+            else()
+              message("- Checkout failed working with master")
+            endif()
+          elseif(ARGN)
             execute_process(COMMAND git checkout "${ARG0}"
                             RESULT_VARIABLE Clone_EXTRACT_RESULT
                             OUTPUT_QUIET ERROR_QUIET
-                            WORKING_DIRECTORY
+                            WORKING_DIRECTORY "${TargetDir}"
                             )
             if(${Clone_EXTRACT_RESULT} EQUAL 0)
               message("- Checkout succeeded")
