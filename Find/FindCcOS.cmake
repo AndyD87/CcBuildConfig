@@ -1,15 +1,7 @@
+# Download the latest CcOS Release
 if(NOT EXISTS ${CMAKE_CURRENT_LIST_DIR}/CcOS)
   CcGitClone(${CMAKE_CURRENT_LIST_DIR}/CcOS "https://coolcow.de/projects/CcOS.git")
 endif()
-
-set(CCOS_BUILDLEVEL                       1     )
-set(CCOS_CCGUI_ACTIVE                     4     )
-set(CCOS_CCDOCUMENTS_ACTIVE               4     )
-set(CCOS_CCSQL_ACTIVE                     4     )
-set(CCOS_CCSSL_ACTIVE                     4     )
-set(CCOS_CCTESTING_ACTIVE                 4     )
-set(CCOS_CCREMOTEDEVICE_ACTIVE            4     )
-set(CCOS_THIRDPARTY_SQLITE3_ACTIVE        4     )
 
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/CcOS/Sources)
 
