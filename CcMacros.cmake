@@ -676,9 +676,10 @@ if(NOT CC_MACRO_LOADED)
       while(${CCCOUNT} LESS ${CC_DOWNLOAD_MAXIMUM_REPEATES} AND
             ${CCSUCCESS} STREQUAL FALSE
       )
+        message("git clone ${CURRENT_URL} ${TargetDir}")
         execute_process(COMMAND git clone "${CURRENT_URL}" "${TargetDir}"
                         RESULT_VARIABLE Clone_EXTRACT_RESULT
-                        OUTPUT_QUIET ERROR_QUIET
+                        #OUTPUT_QUIET ERROR_QUIET
                         )
         if(${Clone_EXTRACT_RESULT} EQUAL 0)
           set(CCSUCCESS TRUE)
