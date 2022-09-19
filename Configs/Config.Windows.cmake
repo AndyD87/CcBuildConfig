@@ -74,7 +74,7 @@ if(DEFINED MSVC)
 
       cmake_parse_arguments(WDK "" "KMDF;WINVER" "" ${ARGN})
 
-      CcAppendToBinaryOuptutPath("../drv")
+      CcAppendToBinaryOuptutPath("../drv/${_target}")
 
       add_executable(${_target} ${WDK_UNPARSED_ARGUMENTS})
 

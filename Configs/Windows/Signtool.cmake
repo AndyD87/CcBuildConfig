@@ -9,7 +9,7 @@
 ###
 
 execute_process(
-  COMMAND ${WDK_SIGNTOOL_FILE} sign /a /v /s PrivateCertStore /n ${WDK_TESTCERT_NAME} /t http://timestamp.digicert2.com ${SIGN_FILE}
+  COMMAND ${WDK_SIGNTOOL_FILE} sign /a /v /s PrivateCertStore /n ${WDK_TESTCERT_NAME} /t http://timestamp.digicert.com ${SIGN_FILE}
   WORKING_DIRECTORY ${SIGN_WORKING_DIRECTORY}
   RESULT_VARIABLE PROC_RESULT
   ERROR_QUIET
